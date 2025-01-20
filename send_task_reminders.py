@@ -4,11 +4,14 @@ import json
 sns = boto3.client('sns')
 event_bridge = boto3.client('events')
 GROUP_NAME = "Team-Members"
-SNS_TOPIC_ARN = 'arn:aws:sns:eu-west-1:**************:notify-on-create-task'
+SNS_TOPIC_ARN = 'arn:aws:sns:eu-west-1:241533136420:notify-on-create-task'
 
 def lambda_handler(event, context):
     """Send a reminder email for an upcoming task."""
     try:
+        print('I am in the try block ooo')
+        print(event)
+        print(context)
         task = event
         
         message = (

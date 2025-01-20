@@ -6,14 +6,14 @@ dynamodb = boto3.resource('dynamodb')
 tasks_table = dynamodb.Table('Tasks')
 
 cognito_client = boto3.client('cognito-idp')
-GROUP_NAME = "Team-Members"
-USER_POOL_ID = "***************"
+GROUP_NAME = "************"
+USER_POOL_ID = "************"
 
 eventbridge = boto3.client('events')
 sns = boto3.client('sns')
-SNS_TOPIC_ARN = 'arn:aws:sns:eu-west-1:************:notify-on-create-task'
+SNS_TOPIC_ARN = 'arn:aws:sns:************:************:notify-on-create-task'
 
-ADMIN_EMAIL = "*************"
+ADMIN_EMAIL = "************"
 
 def schedule_deadline_reminder(task_id, title, due_date, assigned_emails):
     """Schedule a reminder for task deadline."""
@@ -28,7 +28,7 @@ def schedule_deadline_reminder(task_id, title, due_date, assigned_emails):
     
     rule_name = f"TaskReminder_{task_id}"
  
-    cron_expression = f"cron(43 9 {reminder_time_hour.day} {reminder_time_hour.month} ? {reminder_time_hour.year})"
+    cron_expression = f"cron(0 8 {reminder_time_hour.day} {reminder_time_hour.month} ? {reminder_time_hour.year})"
     
     eventbridge.put_rule(
         Name=rule_name,
@@ -41,7 +41,7 @@ def schedule_deadline_reminder(task_id, title, due_date, assigned_emails):
         Targets=[
             {
                 'Id': f"ReminderTarget_{task_id}",
-                'Arn': 'arn:aws:lambda:eu-west-1:************:function:sendTaskReminder',
+                'Arn': 'arn:aws:lambda:************:************:function:sendTaskReminder',
                 'Input': json.dumps({
                     'task_id': task_id,
                     'title': title,

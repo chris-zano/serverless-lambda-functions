@@ -4,7 +4,7 @@ import boto3
 sns_client = boto3.client('sns')
 cognito_client = boto3.client('cognito-idp')
 
-SNS_TOPIC_ARN = "arn:aws:sns:************:**************:notify-on-create-task"
+SNS_TOPIC_ARN = "arn:aws:sns:eu-west-1:241533136420:notify-on-create-task"
 GROUP_NAME = "Team-Members"
 USER_POOL_ID = "eu-west-1_xEP7m4WPV"
 

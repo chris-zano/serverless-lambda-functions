@@ -5,11 +5,27 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('Tasks')
 
 def get_all_tasks():
+    """
+    Retrieves all tasks from the DynamoDB table.
+
+    This function performs a full table scan on the DynamoDB table to fetch all tasks.
+    It returns a list of all items in the table or an error response in case of failure.
+
+    Returns:
+        list: A list of task items if the operation is successful.
+        dict: An error response object containing:
+            - 'statusCode' (int): HTTP status code (500 for errors).
+            - 'body' (str): A JSON string with an error message.
+
+    Notes:
+        - Uses the `scan` operation to fetch all items from the 'Tasks' table.
+        - Handles exceptions and returns an error response in case of unexpected issues.
+    """
+
     try:
         response = table.scan()
         return response['Items']
     except Exception as e:
-        # Return a proper error response in case of failure
         return {
             'statusCode': 500,
             'body': json.dumps(f"Error retrieving tasks: {str(e)}")
@@ -18,13 +34,10 @@ def get_all_tasks():
 
 def lambda_handler(event, context):
     try:
-        # Get all tasks from the table
         tasks = get_all_tasks()
         
-        # Check if the response is an error message or valid tasks
         if isinstance(tasks, dict) and 'statusCode' in tasks:
-            return tasks  # If it's an error response from get_all_tasks
-
+            return tasks
         print('Successfully fetched all tasks')
 
         response_headers = {
@@ -33,14 +46,12 @@ def lambda_handler(event, context):
             "Access-Control-Allow-Headers": "Content-Type,Authorization",
         }
 
-        # Return the tasks in a proper format
         return {
             'statusCode': 200,
             "headers": response_headers,
-            'body': json.dumps(tasks)  # Ensure the response is JSON-encoded
+            'body': json.dumps(tasks)
         }
     except Exception as e:
-        # Improved error handling with error message
         return {
             'statusCode': 500,
             'body': json.dumps(f"Error fetching all tasks: {str(e)}")
